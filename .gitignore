@@ -1,0 +1,7 @@
+/mysql/*
+/node/*
+
+!/mysql/init.sqls
+!/node/Dockerfile
+!/node/Dockerfile.uat
+!/node/index.js
