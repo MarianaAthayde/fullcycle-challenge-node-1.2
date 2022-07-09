@@ -21,7 +21,7 @@ services:
   db: 
     image: mysql:5.7
     # command: --innodb-use-native-aio=0
-    command: --init-file /var/lib/mysql/init.sql
+    command: [--ignore-db-dir=lost+found, --innodb-use-native-aio=0, --init-file /var/lib/mysql/init.sql]
     container_name: db
     restart: always
     tty: true
