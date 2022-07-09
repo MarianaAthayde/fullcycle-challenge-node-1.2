@@ -17,10 +17,10 @@ services:
       - "3000:3000"
     depends_on:
       - db
-  
+    
   db: 
     image: mysql:5.7
-    # command: bash -c "--innodb-use-native-aio=0 && --init-file /data/application/init.sql"
+    # command: --innodb-use-native-aio=0
     command: --init-file /var/lib/mysql/init.sql
     container_name: db
     restart: always
@@ -32,7 +32,23 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     networks:
       - node-network
-      
+
+  webserver:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: nginx:mainline-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - node-network
+
 networks:
   node-network:
     driver: bridge
