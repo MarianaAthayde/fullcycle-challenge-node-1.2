@@ -3,8 +3,7 @@ version: '3'
 services:
 
   app:
-    build: 
-      context: node
+    build: ./node
     container_name: app
     entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh
     command: node index.js
@@ -12,6 +11,7 @@ services:
       - node-network
     volumes:
       - ./node:/usr/src/app
+      - /usr/src/app/node_modules
     tty: true
     ports: 
       - "3000:3000"
@@ -20,13 +20,13 @@ services:
     
   db: 
     image: mysql:5.7
-    # command: --innodb-use-native-aio=0
-    command: [--ignore-db-dir=lost+found, --innodb-use-native-aio=0, --init-file /var/lib/mysql/init.sql]
+    command: --init-file /var/lib/mysqlFiles/init.sql
     container_name: db
     restart: always
     tty: true
     volumes: 
       - ./mysql:/var/lib/mysql
+      - ./mysql_file:/var/lib/mysqlFiles
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
